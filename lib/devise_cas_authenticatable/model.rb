@@ -33,7 +33,7 @@ module Devise
             if resource.respond_to? :cas_extra_attributes= and resource.respond_to? :name
               resource.cas_extra_attributes = ticket.respond_to?(:extra_attributes) ? ticket.extra_attributes : ticket.response.extra_attributes
             end
-            resource.save
+            resource.save(false)
             resource
           end
         end
