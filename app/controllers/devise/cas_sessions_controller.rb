@@ -12,6 +12,15 @@ class Devise::CasSessionsController < Devise::SessionsController
   end
 
   def service
+    # store service ticket for later to be used by Application clients as an API access key
+    # use Thread.current in stead of session because this action 'service' was being redirected from CAS
+    # server multiple times during sign up, params[:ticket] filled with proxy service ticket and service ticket
+    # respectively depending on sessions, sometimes, it was found, during the test, that app client ends up with
+    # proxy service ticket session. The proxy service ticket can not be used as a key because it only exists on
+    # CAS server temporarily.
+    # The service ticket is what the client apps need and is the last one to arrive,
+    # which will be stored in Thread.current[:ticket]
+    Thread.current[:ticket] = params[:ticket]
     redirect_to after_sign_in_path_for(warden.authenticate!(:scope => resource_name))
   end
 
