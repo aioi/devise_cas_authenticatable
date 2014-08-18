@@ -6,9 +6,7 @@ class Devise::CasSessionsController < Devise::SessionsController
   skip_before_filter :verify_authenticity_token, :only => [:single_sign_out]
 
   def new
-    unless returning_from_cas?
-      redirect_to(cas_login_url)
-    end
+    redirect_to(cas_login_url)
   end
 
   def service
